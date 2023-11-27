@@ -4,6 +4,7 @@ import styles from "./page.module.css";
 import Gallery from "./gallery";
 
 export default function Home() {
+  // data from https://jsonplaceholder.typicode.com/users
   const users = [
     {
       id: 1,
@@ -238,7 +239,7 @@ export default function Home() {
   ];
   return (
     <main className={styles.main}>
-      <Gallery users={users} />
+      <Gallery />
     </main>
   );
 }
