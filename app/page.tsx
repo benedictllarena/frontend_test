@@ -239,7 +239,7 @@ export default function Home() {
   ];
   return (
     <main className={styles.main}>
-      <Gallery users={users} />
+      <Gallery />
     </main>
   );
 }
