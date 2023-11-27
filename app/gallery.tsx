@@ -9,6 +9,7 @@ import {
   FaEnvelope,
 } from "react-icons/fa6";
 
+import Controls from "./controls";
 import Modal from "./modal";
 
 import { User } from "./types/user";
@@ -20,11 +21,13 @@ const Gallery = ({ users }: GalleryProps) => {
   const [usersList, setUsersList] = useState(users);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [sortFieldFilter, setSortFieldFilter] = useState("");
+  const [sortFieldDirection, setSortFieldDirection] = useState("");
 
   const handleModalOpen = (id: number) => {
     const user = usersList.find((item) => item.id === id) || null;
 
-    if(user) {
+    if (user) {
       setSelectedUser(user);
       setIsModalOpen(true);
     }
@@ -35,9 +38,52 @@ const Gallery = ({ users }: GalleryProps) => {
     setIsModalOpen(false);
   };
 
+  const handleSortField = (val: any) => {
+    setSortFieldFilter(val?.value);
+    sortUsers(val?.value, sortFieldDirection);
+  };
+
+  const handleSortDirection = (val: any) => {
+    setSortFieldDirection(val?.value);
+    sortUsers(sortFieldFilter, val?.value);
+  };
+
+  const sortUsers = (sortFieldFilterValue: string | "", sortFieldDirectionValue: string | "") => {
+    let sortedUsers = users;
+
+    if (sortFieldFilterValue === "name") {
+      if (sortFieldDirectionValue === "descending") {
+        sortedUsers = usersList.sort((a, b) => (a.name > b.name ? -1 : 1));
+      } else {
+        sortedUsers = usersList.sort((a, b) => (a.name > b.name ? 1 : -1));
+      }
+      
+    } else if (sortFieldFilterValue === "company") {
+      if (sortFieldDirectionValue === "descending") {
+        sortedUsers = usersList.sort((a, b) => (a.company?.name > b.company?.name ? -1 : 1));
+      } else {
+        sortedUsers = usersList.sort((a, b) => (a.company?.name > b.company?.name ? 1 : -1));
+      }
+    } else if (sortFieldFilterValue === "email") {
+      if (sortFieldDirectionValue === "descending") {
+        sortedUsers = usersList.sort((a, b) => (a.email > b.email ? -1 : 1));
+      } else {
+        sortedUsers = usersList.sort((a, b) => (a.email > b.email ? 1 : -1));
+      }
+    }
+
+    setUsersList(sortedUsers);
+  };
+
   return (
     <div className="user-gallery">
-      <h1 className="heading">Users</h1>
+      <div className="heading">
+        <h1 className="title">Users</h1>
+        <Controls
+          handleSortField={handleSortField}
+          handleSortDirection={handleSortDirection}
+        />
+      </div>
       <div className="items">
         {usersList.map((user, index) => (
           <div
